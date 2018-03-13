@@ -12,7 +12,7 @@ from setuptools import setup, find_packages
 
 VERSION = ""
 with open('corpwechat/__init__.py', 'r') as fd:
-    VERSION = re.findall('__version__.*=\s*[0-9]\.[0-9]\.[0-9]+', fd.read())[0]
+    VERSION = re.findall("__version__\s*=\s*'([0-9]\.[0-9]\.[0-9]+)'", fd.read())[0]
 if not VERSION:
     raise RuntimeError("not found version info")
 
