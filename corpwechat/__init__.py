@@ -4,4 +4,4 @@
 __author__ = 'yorks.yang@163.com'
 __version__ = '0.0.1'
 
-from .base import corpWechat
+from .base import API

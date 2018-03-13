@@ -7,8 +7,8 @@ import time
 import os
 
 
-class corpWechat(object):
-    """ Base class for most corpwechat object.
+class API(object):
+    """ Base class for most corpwechat API object.
 
     Args:
         configpath:  用来保存配置的文件路径，很重要，不要被其它人读取.
@@ -273,7 +273,7 @@ class corpWechat(object):
 
 if __name__ == "__main__":
 
-    corpwx = corpWechat('config.json')
+    corpwx = API('config.json')
     tk = corpwx.get_token()
     if not tk:
         sys.exit(1)
