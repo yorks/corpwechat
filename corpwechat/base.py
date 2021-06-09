@@ -99,7 +99,6 @@ class API(object):
                    'totag': self._users_format_2_str(totag),
                    'agentid': agentid,
                    'msgtype': msgtype,
-                   'msgtype': msgtype,
                     msgtype: content,
                 }
         if msgtype != 'news':
@@ -120,6 +119,18 @@ class API(object):
         return self._push_message(agentid=agentid, msgtype='text',
                 content={'content':content},  touser=touser,
                 toparty=toparty, totag=totag, safe=safe)
+
+    def push_textcard_msg(self, agentid=0, title='', description='', url='',
+            touser='@all', toparty='', totag='', safe=0):
+        content = { "title" : title,
+            "description" : description,
+            "url" : url,
+            "btntxt":"More"
+            }
+        return self._push_message(agentid=agentid, msgtype='textcard',
+                content=content,  touser=touser,
+                toparty=toparty, totag=totag, safe=safe)
+
 
     def push_image_msg(self, agentid=0, media_id='', filepath='',
             touser='@all', toparty='', totag='', safe=0):
