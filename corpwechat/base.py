@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 #-*- coding: utf-8 -*-
 
 import requests
@@ -47,8 +47,8 @@ class API(object):
             content = fp.read()
             fp.close()
             return json.loads( content )
-        except Exception, e:
-            print e
+        except Exception as e:
+            print (e)
             return {}
 
     def save_config(self):
@@ -57,8 +57,8 @@ class API(object):
             fw.write(json.dumps(self.config))
             fw.close()
             return True
-        except Exception, e:
-            print e
+        except Exception as e:
+            print (e)
             return False
 
     def get_token(self):
@@ -67,19 +67,19 @@ class API(object):
             return self.config['access_tk']
 
         if not self.config['corpid']:
-            print "missing corpid"
+            print ("missing corpid")
             return False
         if not self.config['corpsecret']:
-            print "missing corpsecret"
+            print ("missing corpsecret")
             return False
-        print "get new token..."
+        #print "get new token..."
         payload = {'corpid':self.config['corpid'], 'corpsecret':self.config['corpsecret']}
         url = self.api_pre + 'gettoken'
         r = requests.get(url, params=payload)
         try:
             ret = r.json()
-        except Exception, e:
-            print e
+        except Exception as e:
+            print (e)
             return False
         self.config['access_tk'] = ret['access_token']
         self.config['tk_expires'] = int(time.time()) + ret['expires_in'] - 10
@@ -110,8 +110,8 @@ class API(object):
         r = requests.post(url, json=payload, params={'access_token':tk})
         try:
             ret = r.json()
-        except Exception, e:
-            print e
+        except Exception as e:
+            print (e)
             return False
         return ret
 
@@ -225,14 +225,14 @@ class API(object):
 
         fsize = os.path.getsize(filepath)
         if type_ in ['image', 'voice'] and fsize >= 2*1024*1024:
-            print "file size too large > 2M"
+            print ("file size too large > 2M")
             return False
         if type_ == 'video' and fsize >= 10*1024*1024:
-            print "file size too large > 10M"
+            print ("file size too large > 10M")
             return False
 
         if type_ == 'file' and fsize >= 20*1024*1024:
-            print "file size too large > 20M"
+            print ("file size too large > 20M")
             return False
 
 
@@ -242,8 +242,8 @@ class API(object):
         r = requests.post(url, files=files, params=payload)
         try:
             ret = r.json()
-        except Exception, e:
-            print e
+        except Exception as e:
+            print (e)
             return False
         return ret
 
@@ -257,13 +257,13 @@ class API(object):
         return self._upload(filepath, 'file')
 
     def get_agent_list(self):
-        url = self.api_pre + '/agent/list'
+        url = self.api_pre + 'agent/list'
         payload = {'access_token':self.get_token() }
         r = requests.get(url, params=payload)
         try:
             ret = r.json()
-        except Exception, e:
-            print e
+        except Exception as e:
+            print (e)
             return False
         return ret
 
@@ -272,14 +272,34 @@ class API(object):
 
 
 if __name__ == "__main__":
+    aid = None
+    content = None
+    import sys
+    try:
+        cf = sys.argv[1]
+        if not os.path.isfile(cf):
+            content = cf
+            cf = './config.json'
+    except:
+        cf = './config.json'
 
-    corpwx = API('config.json')
+    corpwx = API(cf)
     tk = corpwx.get_token()
     if not tk:
         sys.exit(1)
+
     ret = corpwx.get_agent_list()
-    for a in ret['agentlist']:
-        print "agentid:", a['agentid'], "name:", a['name']
-    aid = int(raw_input('please input which agentid to send msg:'))
-    content=raw_input('please input the msg to send to @all:')
-    print corpwx.push_text_msg(agentid=aid, content=content)
+    if len(ret['agentlist']) == 1:
+        aid = ret['agentlist'][0]['agentid']
+
+    try:
+        input = raw_input
+    except:
+        pass
+    if not aid:
+        for a in ret['agentlist']:
+            print ("agentid:", a['agentid'], "name:", a['name'])
+        aid = int(input('please input which agentid to send msg:'))
+    if not content:
+        content=input('please input the msg to send to @all:')
+    print (corpwx.push_text_msg(agentid=aid, content=content))
