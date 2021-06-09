@@ -22,6 +22,7 @@ Topic :: Utilities
 Programming Language :: Python
 Programming Language :: Python :: 2.6
 Programming Language :: Python :: 2.7
+Programming Language :: Python :: 3
 Topic :: Software Development :: Libraries :: Python Modules
 License :: OSI Approved :: Apache Software License
 """
@@ -42,6 +43,7 @@ setup(name='corpwechat',
       license = "GPLv3.0",
       description=u'a qiye wechat api module, 企业微信的API相关的python实现 https://work.weixin.qq.com/api/doc',
       long_description=doc+'\n\n',
+      long_description_content_type='text/markdown',
       platforms = [ "any" ],
       keywords = "api, 企业微信, 微信, wechat, corpwechat",
       classifiers=classifiers.splitlines(),
